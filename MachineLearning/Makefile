@@ -10,6 +10,7 @@ all : $(LIB_DATA)
 
 $(LIB_DATA) : libdir objdir obj/data_handler.o obj/data.o
 	$(CC) $(CFLAGS) -o lib/$(LIB_DATA) obj/*.o
+	rm -r $(ML_ROOT)/obj
 
 libdir: 
 	mkdir -p $(ML_ROOT)/lib
