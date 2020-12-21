@@ -13,7 +13,7 @@ void data_handler::read_feature_vector(std::string path)
 {
 	uint32_t header[4];
 	uint8_t bytes[4];
-	FILE* f = fopen(path.c_str(), "r");
+	FILE* f = fopen(path.c_str(), "rb");
 	if (f)
 	{
 		for (size_t i = 0; i < 4; i++)
@@ -23,8 +23,9 @@ void data_handler::read_feature_vector(std::string path)
 				header[i] = convert_to_little_endian(bytes);
  			}
 		}
-		printf("Done getting header data \n");
+		printf("[%s][%d] Done in getting header for feature vector\n", __func__ ,__LINE__);
 		int image_size = header[2] * header[3];
+		printf("image size: %d\n", header[1]);
 
 		// Loop through each image
 		for (size_t i = 0; i < header[1]; i++)
@@ -40,18 +41,18 @@ void data_handler::read_feature_vector(std::string path)
 				}
 				else
 				{
-					printf("Error in reading from file\n");
+					printf("[%s][%d] Error in reading from file\n", __func__, __LINE__);
 					exit(1);
 				}
 			}
 			data_array->push_back(d);
 		}
 		data_size = data_array->size();
-		printf("Successfully read and stored %lu feature vectors.\n", data_array->size());
+		printf("[%s][%d] Successfully read and stored %lu feature vectors.\n", __func__, __LINE__, data_array->size());
 	}
 	else
 	{
-		printf("File dose not exist! %d %s\n", __LINE__, __func__);
+		printf("[%s][%d] File dose not exist!\n", __func__, __LINE__);
 		exit(1);
 	}
 };
@@ -59,7 +60,7 @@ void data_handler::read_feature_label(std::string path)
 {
 	uint32_t header[2];
 	uint8_t bytes[4];
-	FILE* f = fopen(path.c_str(), "r");
+	FILE* f = fopen(path.c_str(), "rb");
 	if(f)
 	{
 		for (size_t i = 0; i < 2; i++)
@@ -69,7 +70,7 @@ void data_handler::read_feature_label(std::string path)
 				header[i] = convert_to_little_endian(bytes);
 			}
 		}
-		printf("Done getting header label \n");
+		printf("[%s][%d] Done getting header label \n",__func__, __LINE__);
 
 		// Loop through number of images
 		uint8_t element[1];
@@ -82,15 +83,15 @@ void data_handler::read_feature_label(std::string path)
 			}
 			else
 			{
-				printf("Error in reading from file\n");
+				printf("[%s][%d] Error in reading from file\n", __func__, __LINE__);
 			}
 		}
 
-		printf("Done read and stored label\n");
+		printf("[%s][%d] Done read and stored label\n", __func__, __LINE__);
 	}
 	else
 	{
-		printf("File dose not exist \n");
+		printf("[%s][%d] File dose not exist \n", __func__, __LINE__);
 	}
 
 };
@@ -101,48 +102,53 @@ void data_handler::split_data()
 	int test_size = data_size * TETS_SET_PERCENT;
 	int valid_size = data_size * VALIDATION_SET_PERCENT;
 
+	printf("%d, %d, %d \n", training_size, test_size, valid_size);
+
 	std::unordered_set<int> used_indexes; // use un ordered set for shuffle
 
 	// Training data
 	int count = 0;
 	while (count < training_size)
-	{
-		int rand_index = rand() % data_size; // rand_index from 0 to data_size -1
+	{	
+		uint16_t rand_index = rand() % data_size; // rand_index from 0 to data_size -1
 		if (used_indexes.find(rand_index) == used_indexes.end()) // Cant find rand_index in used_indexes
 		{
 			traninng_array->push_back(data_array->at(rand_index));
 			used_indexes.insert(rand_index);
+			count++;
+			printf("count training: %d\n", count);
 		}
-		count++;
 	}
 
 	// Test data
 	count = 0;
 	while (count < test_size)
 	{
-		int rand_index = rand() % data_size; // rand_index from 0 to data_size -1
+		int rand_index = (rand()) % data_size; // rand_index from 0 to data_size -1
 		if (used_indexes.find(rand_index) == used_indexes.end()) // Cant find rand_index in used_indexes
 		{
 			test_array->push_back(data_array->at(rand_index));
 			used_indexes.insert(rand_index);
+			count++;
+			printf("count testing: %d\n", count);
 		}
-		count++;
 	}
 
 	// validation data
 	count = 0;
 	while (count < valid_size)
 	{
-		int rand_index = rand() % data_size; // rand_index from 0 to data_size -1
+		int rand_index = (rand()) % data_size; // rand_index from 0 to data_size -1
 		if (used_indexes.find(rand_index) == used_indexes.end()) // Cant find rand_index in used_indexes
 		{
 			validation_array->push_back(data_array->at(rand_index));
 			used_indexes.insert(rand_index);
+			count++;
+			printf("count validation: %d\n", count);
 		}
-		count++;
 	}
 
-	printf("Training size:%d, Testing size:%d, Valid size:%d \n", traninng_array->size(), test_array->size(), validation_array->size());
+	printf("[%s][%d] Training size:%ld, Testing size:%ld, Valid size:%ld \n", __func__, __LINE__,  traninng_array->size(), test_array->size(), validation_array->size());
 };
 void data_handler::count_classes()
 {
@@ -157,7 +163,7 @@ void data_handler::count_classes()
 		}
 	}
 	num_classes = count;
-	printf("Successfully extracted %u classes \n", num_classes);
+	printf("[%s][%d] Successfully extracted %u classes \n", __func__, __LINE__, num_classes);
 };
 
 uint32_t data_handler::convert_to_little_endian(const uint8_t* bytes)
@@ -166,13 +172,16 @@ uint32_t data_handler::convert_to_little_endian(const uint8_t* bytes)
 };
 std::vector<data*>* data_handler::get_training_data()
 {
+	printf("[%s][%d] traning data size = %ld\n", __func__, __LINE__, traninng_array->size());
 	return traninng_array;
 };
 std::vector<data*>* data_handler::get_testing_data()
 {
+	printf("[%s][%d] testing data size = %ld\n", __func__, __LINE__, test_array->size());
 	return test_array;
 };
 std::vector<data*>* data_handler::get_validation_data()
 {
+	printf("[%s][%d] validation data size = %ld\n", __func__, __LINE__, validation_array->size());
 	return validation_array;
 };
