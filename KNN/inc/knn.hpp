@@ -32,13 +32,6 @@ public:
 	void set_k(uint32_t);
 };
 
-Knn::Knn()
-{
-}
-
-Knn::~Knn()
-{
-}
 
 #endif // !__KNN__
 

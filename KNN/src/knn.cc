@@ -76,7 +76,12 @@ void Knn::find_k_nearest(data* query_point)
 	{
 		neighbors->push_back(training_data->at(distances[i].second));
 	}
-	printf("[%s][%d] Successfully find k:%u nearest neighbors\n", __func__, __LINE__, neighbors->size());
+	printf("\n[%s][%d] Successfully find k:%lu nearest neighbors: ", __func__, __LINE__, neighbors->size());
+	for (size_t i = 0; i < k; i++)
+	{
+		printf("%d, ", distances[i].second);
+	}
+	
 };
 int Knn::predict()
 {
@@ -112,7 +117,9 @@ int Knn::predict()
 double Knn::validation_performance()
 {
 	uint8_t label_predict;
-	uint32_t count_accuracy;
+	uint32_t count_accuracy=0;
+	uint32_t count_data=0;
+	
 	for (data* query_point : * validation_data)
 	{
 		find_k_nearest(query_point);
@@ -121,8 +128,10 @@ double Knn::validation_performance()
 		{
 			count_accuracy++;
 		}
+		count_data ++;	
+		printf("\n[%s][%d] predict:%u->%u(truelb) Current validation accuray k:%u \x1B[31m %.2f % \033[0m", __func__, __LINE__, label_predict, query_point->get_label() , k, ((double)(count_accuracy*100)) / count_data);
 	}
-	printf("[%s][%d] Validation accuray k:%u %.3f \n", k, ((double)(count_accuracy*100)) / validation_data->size());
+	printf("[%s][%d] Final validation accuray k:%u %.3f \n", __func__, __LINE__, k, ((double)(count_accuracy*100)) / validation_data->size());
 	return ((double)(count_accuracy * 100)) / validation_data->size();
 };
 double Knn::test_performance()
@@ -138,6 +147,6 @@ double Knn::test_performance()
 			count_accuracy++;
 		}
 	}
-	printf("[%s][%d] Test accuray k:%u %.3f \n", k, ((double)(count_accuracy * 100)) / testing_data->size());
+	printf("[%s][%d] Test accuray k:%u %.3f \n", __func__, __LINE__, k, ((double)(count_accuracy * 100)) / testing_data->size());
 	return ((double)(count_accuracy * 100)) / testing_data->size();
 };
