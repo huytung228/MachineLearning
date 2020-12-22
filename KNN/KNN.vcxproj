@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{77abc2d3-ea8c-42b6-b2eb-d595bc9c60f7}</ProjectGuid>
-    <RootNamespace>MachineLearning</RootNamespace>
+    <ProjectGuid>{773427e5-e922-4cc4-ad19-0c1db7e501f3}</ProjectGuid>
+    <RootNamespace>KNN</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>MNISTDataset</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -89,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\MNISTDataset\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\tunglh2\source\repos\MachineLearning\KNN\inc;$(SolutionDir)/MNISTDataset/inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\tunglh2\source\repos\MachineLearning\KNN\inc;$(SolutionDir)/MNISTDataset/inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,7 +118,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\MachineLearning\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,13 +141,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\data.cc" />
-    <ClCompile Include="src\data_hanndler.cc" />
-    <ClCompile Include="src\main.cc" />
+    <ClInclude Include="inc\knn.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\Data.hpp" />
-    <ClInclude Include="inc\data_handler.hpp" />
+    <ClCompile Include="src\knn.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
